@@ -246,6 +246,14 @@ def load_and_process_data(_file, file_identifier):
         df.dropna(subset=['timestamp'], inplace=True)
         df['hour_int'] = df['timestamp'].dt.hour
         
+        # --- Robust analyte column mapping for template compatibility ---
+        analyte_col = None
+        for col in df.columns:
+            if col.strip().upper() in ['ANALYT', 'ANALYTE', 'PARAMETER', 'STOFF']:
+                analyte_col = col
+                break
+        if analyte_col:
+            df.rename(columns={analyte_col: 'analyte'}, inplace=True)
         # Ensure analyte column exists and normalize values
         if 'analyte' in df.columns:
             df['analyte'] = df['analyte'].astype(str).str.strip().str.title()
