@@ -246,9 +246,10 @@ def load_and_process_data(_file, file_identifier):
         df.dropna(subset=['timestamp'], inplace=True)
         df['hour_int'] = df['timestamp'].dt.hour
         
+        # Ensure analyte column exists and normalize values
         if 'analyte' in df.columns:
             df['analyte'] = df['analyte'].astype(str).str.strip().str.title()
-            df['analyte'].replace(['', 'Nan', 'None', 'Nan'], 'Unknown Analyte', inplace=True)
+            df['analyte'].replace(['', 'Nan', 'None', 'Na', 'N/A'], 'Unknown Analyte', inplace=True)
             df['analyte'] = df['analyte'].fillna('Unknown Analyte')
         else:
             df['analyte'] = "Unknown Analyte"
